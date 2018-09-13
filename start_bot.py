@@ -5,8 +5,11 @@ import re
 from slackclient import SlackClient
 import random
 from get_paladar_menu import get_paladar_menu
+from llista_menjar import FoodManager
 
 SHRUG = '¯\_(ツ)_/¯'
+
+FOOD = FoodManager()
 
 RANDOM_RESPONSES = [
     'In the forest you met a redhead woman. Now you know nothing. You returned home empty handed.', 
@@ -17,7 +20,9 @@ RANDOM_RESPONSES = [
 ]
 
 COMMANDS = {
-    'menu': get_paladar_menu
+    'menu': get_paladar_menu,
+    'list': FOOD.create_list,
+    'done': FOOD.end_list,
 }
 
 BOT_NAME = 'MORT DE GANA'
@@ -68,7 +73,9 @@ def handle_command(command, channel):
     response = None
     response_function = COMMANDS.get(command)
     if response_function:
-        response = response_function()
+        response = response_function(channel, command)
+    if not response and FOOD.status(channel):
+        response = FOOD.add_to_list(channel, command)
 
     # Sends the response back to the channel
     slack_client.api_call(

@@ -15,7 +15,7 @@ URL_PALADAR = 'https://paladar.cat/'
 SLACK_URL = 'https://hooks.slack.com/services/'
 
 
-def get_paladar_menu():
+def get_paladar_menu(channel, message):
     s = requests.Session()
     s.cookies.set_policy(BlockAll())
     r = s.get(
