@@ -4,6 +4,7 @@ import time
 import re
 from slackclient import SlackClient
 import random
+import logging
 from get_paladar_menu import get_paladar_menu
 from llista_menjar import FoodManager
 
@@ -71,11 +72,11 @@ def handle_command(command, channel):
 
     # Finds and executes the given command, filling in response
     response = None
-    response_function = COMMANDS.get(command)
+    response_function = COMMANDS.get(command.split()[0])
     if response_function:
-        response = response_function(channel, command)
+        response = response_function(channel, ' '.join(command.split()[1:]))
     if not response and FOOD.status(channel):
-        response = FOOD.add_to_list(channel, command)
+        response = FOOD.add_to_list(channel, ' '.join(command.split()[0:]))
 
     # Sends the response back to the channel
     slack_client.api_call(
@@ -88,6 +89,7 @@ def handle_command(command, channel):
 
 if __name__ == "__main__":
     if slack_client.rtm_connect(with_team_state=False):
+        logging.basicConfig()
         print("Starter Bot connected and running!")
         # Read bot's user ID by calling Web API method `auth.test`
         starterbot_id = slack_client.api_call("auth.test")["user_id"]
