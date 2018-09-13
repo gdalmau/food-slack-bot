@@ -9,15 +9,15 @@ from get_paladar_menu import get_paladar_menu
 SHRUG = '¯\_(ツ)_/¯'
 
 RANDOM_RESPONSES = [
-	'In the forest you met a redhead woman. Now you know nothing. You returned home empty handed.', 
-	'You\'ve stepped into a pile of dung. Now you stink. Nothing else happened.',
-	'It was a really nice and sunny day, so you sat under a tree and enjoyed the weather...',
-	'It was a cool and refreshing night, so you made a campfire out in the woods.',
-	'As you were strolling through the forest, you noticed a group of people building a giant wall on a small meadow. Their leader, an orange man with crazy hair, looked dangerous, so you decided to head back to your home'
-] + SHRUG
+    'In the forest you met a redhead woman. Now you know nothing. You returned home empty handed.', 
+    'You\'ve stepped into a pile of dung. Now you stink. Nothing else happened.',
+    'It was a really nice and sunny day, so you sat under a tree and enjoyed the weather...',
+    'It was a cool and refreshing night, so you made a campfire out in the woods.',
+    'As you were strolling through the forest, you noticed a group of people building a giant wall on a small meadow. Their leader, an orange man with crazy hair, looked dangerous, so you decided to head back to your home'
+]
 
 COMMANDS = {
-	'menu': get_paladar_menu
+    'menu': get_paladar_menu
 }
 
 BOT_NAME = 'MORT DE GANA'
@@ -60,21 +60,22 @@ def handle_command(command, channel):
     """
     # Default response
     default_response = '{} {}'.format(
-		random.choice(RANDOM_RESPONSES), SHRUG
-	)
+        random.choice(RANDOM_RESPONSES), SHRUG
+    )
+    default_response = SHRUG
 
     # Finds and executes the given command, filling in response
     response = None
-	response_function = COMMANDS.get(command)
-	if response_function:
-		response = response_function()
+    response_function = COMMANDS.get(command)
+    if response_function:
+        response = response_function()
 
     # Sends the response back to the channel
     slack_client.api_call(
         "chat.postMessage",
         channel=channel,
         text=response or default_response,
-		username=BOT_NAME
+        username=BOT_NAME
     )
 
 
